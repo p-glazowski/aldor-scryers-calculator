@@ -1,26 +1,24 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  /* COLORS */
+  --color-my-violet: #8b5a9b; /* // Core crystal/magic purple [web:22] */
+  --color-my-lavender: #a890c7; /* // Lighter mystical glow */
+  --color-my-turquoise: #4a90a8; /* // Naaru/aldor blue-green accents */
+  --color-my-gold: #d4af37; /* // Aldor/Scryer metallic highlights */
+  --color-my-sand: #c9a978; /* // Outland dusty earth */
+  --color-my-obsidian: #2d1b3a; /*  // Dark purple shadows */
+  --color-my-crystal: #e6d5ff; /*  // Faint purple shimmer */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  background-image: url('/shatt.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
 }
