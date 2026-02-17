@@ -15,7 +15,11 @@ export default function Home() {
   const [openCurrentRep, setOpenCurrentRep] = useState(false);
   const [goalRep, setGoalRep] = useState(42000);
   const [openGoalRep, setOpenGoalRep] = useState(false);
-  const [itemPrice, setItemPrice] = useState({ small: 80, big: 90, best: 900 });
+  const [itemPrice, setItemPrice] = useState({
+    small: 99,
+    big: 93,
+    best: 1500,
+  });
   const [humanRacial, setHumanRacial] = useState(false);
   const [side, setSide] = useState(1);
 
@@ -129,6 +133,44 @@ export default function Home() {
       bigItems: cheapest.bigItems,
       bestItems: cheapest.bestItems,
     };
+  }
+
+  function showInWoWGold(moneyInSilver: number) {
+    const gold =
+      moneyInSilver > 99 ? (moneyInSilver / 100).toString().split('.')[0] : 0;
+    const silver =
+      moneyInSilver > 99
+        ? (moneyInSilver / 100).toString().split('.')[1]
+        : moneyInSilver;
+
+    return (
+      <div className="flex gap-2 justify-end text-sm mt-1">
+        {Number(gold) !== 0 && (
+          <div className="flex gap-1 items-center">
+            <p>{gold}</p>
+            <Image
+              src="/gold.webp"
+              alt="gold icon"
+              width={20}
+              height={20}
+              className="w-4 h-4"
+            />
+          </div>
+        )}
+        {Number(silver) !== 0 && silver && (
+          <div className="flex gap-1 items-center">
+            <p>{silver}</p>
+            <Image
+              src="/silver.webp"
+              alt="silver icon"
+              width={20}
+              height={20}
+              className="w-4 h-4"
+            />
+          </div>
+        )}
+      </div>
+    );
   }
 
   const { smallItems, bigItems, bestItems } = calculateItemsNeeded(
@@ -305,102 +347,111 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-8">
                   <h3 className="font-bold text-sm text-white">
                     {side === 1 ? 'Marks' : 'Signets'} Price
                   </h3>
-                  <div className="flex flex-row gap-10 items-center justify-between">
-                    <div className="flex gap-4 items-center">
-                      <Image
-                        src={side === 1 ? '/mark.jpg' : '/sunfury.jpg'}
-                        width={800}
-                        height={800}
-                        alt="Gold coins incon"
-                        className="w-8 h-8 rounded-md"
-                      />
-                      <p>
-                        {side === 1 ? `Mark of Kil'jaeden` : 'Firewing Signet'}{' '}
-                        price
-                      </p>
+                  <div>
+                    <div className="flex flex-row gap-10 items-center justify-between">
+                      <div className="flex gap-4 items-center">
+                        <Image
+                          src={side === 1 ? '/mark.jpg' : '/sunfury.jpg'}
+                          width={800}
+                          height={800}
+                          alt="Gold coins incon"
+                          className="w-8 h-8 rounded-md"
+                        />
+                        <p>
+                          {side === 1
+                            ? `Mark of Kil'jaeden`
+                            : 'Firewing Signet'}
+                        </p>
+                      </div>
+                      <div className="basis-1/3 relative">
+                        {/*    <p className="absolute top-1/2 -translate-y-1/2 right-3 text-gray-300">
+                          s
+                        </p> */}
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          pattern="[0-9]*"
+                          name="small"
+                          id="rep"
+                          className="w-full h-full border border-my-violet text-my-lavender p-2 rounded-md text-right"
+                          placeholder="0"
+                          value={itemPrice.small}
+                          onChange={handleItemPrice}
+                        />
+                      </div>
                     </div>
-                    <div className="basis-1/3 relative">
-                      <p className="absolute top-1/2 -translate-y-1/2 right-3 text-gray-300">
-                        s
-                      </p>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        pattern="[0-9]*"
-                        name="small"
-                        id="rep"
-                        className="w-full h-full border border-my-violet text-my-lavender p-2 rounded-md"
-                        placeholder="0"
-                        value={itemPrice.small}
-                        onChange={handleItemPrice}
-                      />
-                    </div>
+                    {showInWoWGold(itemPrice.small)}
                   </div>
-                  <div className="flex flex-row gap-10 items-center justify-between">
-                    <div className="flex gap-4 items-center">
-                      <Image
-                        src={side === 1 ? '/mark.jpg' : '/signet.jpg'}
-                        width={800}
-                        height={800}
-                        alt="Gold coins incon"
-                        className="w-8 h-8 rounded-md"
-                      />
-                      <p>
-                        {side === 1 ? `Mark of Sargeras` : 'Sunfury Signet'}{' '}
-                        price
-                      </p>
+                  <div>
+                    <div className="flex flex-row gap-10 items-center justify-between">
+                      <div className="flex gap-4 items-center">
+                        <Image
+                          src={side === 1 ? '/mark.jpg' : '/signet.jpg'}
+                          width={800}
+                          height={800}
+                          alt="Gold coins incon"
+                          className="w-8 h-8 rounded-md"
+                        />
+                        <p>
+                          {side === 1 ? `Mark of Sargeras` : 'Sunfury Signet'}
+                        </p>
+                      </div>
+                      <div className="basis-1/3 relative">
+                        {/*    <p className="absolute top-1/2 -translate-y-1/2 right-3 text-gray-300">
+                          s
+                        </p> */}
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          pattern="[0-9]*"
+                          name="big"
+                          id="rep"
+                          className="w-full h-full border border-my-violet text-my-lavender p-2 rounded-md text-right"
+                          placeholder="0"
+                          value={itemPrice.big}
+                          onChange={handleItemPrice}
+                        />
+                      </div>
                     </div>
-                    <div className="basis-1/3 relative">
-                      <p className="absolute top-1/2 -translate-y-1/2 right-3 text-gray-300">
-                        s
-                      </p>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        pattern="[0-9]*"
-                        name="big"
-                        id="rep"
-                        className="w-full h-full border border-my-violet text-my-lavender p-2 rounded-md"
-                        placeholder="0"
-                        value={itemPrice.big}
-                        onChange={handleItemPrice}
-                      />
-                    </div>
+                    {showInWoWGold(itemPrice.big)}
                   </div>
-                  <div className="flex flex-row gap-10 items-center justify-between">
-                    <div className="flex gap-4 items-center">
-                      <Image
-                        src={side === 1 ? '/fel.jpg' : '/arcane.jpg'}
-                        width={800}
-                        height={800}
-                        alt="Gold coins incon"
-                        className="w-8 h-8 rounded-md"
-                      />
-                      <p>{side === 1 ? `Fel Armament` : 'Arcane Tome'} price</p>
+                  <div>
+                    <div className="flex flex-row gap-10 items-center justify-between">
+                      <div className="flex gap-4 items-center">
+                        <Image
+                          src={side === 1 ? '/fel.jpg' : '/arcane.jpg'}
+                          width={800}
+                          height={800}
+                          alt="Gold coins incon"
+                          className="w-8 h-8 rounded-md"
+                        />
+                        <p>{side === 1 ? `Fel Armament` : 'Arcane Tome'}</p>
+                      </div>
+                      <div className="basis-1/3 relative">
+                        {/*    <p className="absolute top-1/2 -translate-y-1/2 right-3 text-gray-300">
+                          s
+                        </p> */}
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          pattern="[0-9]*"
+                          name="best"
+                          id="rep"
+                          className="w-full h-full border border-my-violet text-my-lavender p-2 rounded-md text-right"
+                          placeholder="0"
+                          value={itemPrice.best}
+                          onChange={handleItemPrice}
+                        />
+                      </div>
                     </div>
-                    <div className="basis-1/3 relative">
-                      <p className="absolute top-1/2 -translate-y-1/2 right-3 text-gray-300">
-                        s
-                      </p>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        pattern="[0-9]*"
-                        name="best"
-                        id="rep"
-                        className="w-full h-full border border-my-violet text-my-lavender p-2 rounded-md"
-                        placeholder="0"
-                        value={itemPrice.best}
-                        onChange={handleItemPrice}
-                      />
-                    </div>
+                    {showInWoWGold(itemPrice.best)}
                   </div>
                   <p className="text-xs -mt-2 text-my-gold text-center">
-                    Price in{' '}
+                    Put price in{' '}
                     <span className="text-gray-300 font-bold">SILVER</span>{' '}
                     (e.g. 7 gold 33 silver ={' '}
                     <span className="text-gray-300 font-bold">733</span>)
