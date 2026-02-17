@@ -63,41 +63,35 @@ export default function Home() {
     return '0 - 2999';
   }
 
-  const calculateItemsNeeded = (
-    currentTotalRep: number,
-    goalTotalRep: number,
-  ) => {
-    const SMALL_REP_PER_ITEM = humanRacial ? 25 + 25 / 10 : 25; // Marks of Kil'jaeden
-    const BIG_REP_PER_ITEM = humanRacial ? 25 + 25 / 10 : 25; // Marks of Sargeras
+  function calculateItemsNeeded(currentTotalRep: number, goalTotalRep: number) {
+    const repPerItem = humanRacial ? 25 + 25 / 10 : 25;
 
     if (itemPrice.big <= itemPrice.small) {
       const smallItems = 0;
 
-      const bigItems = Math.ceil(
-        (goalTotalRep - currentTotalRep) / BIG_REP_PER_ITEM,
-      );
+      const bigItems = Math.ceil((goalTotalRep - currentTotalRep) / repPerItem);
 
       return { smallItems, bigItems };
     }
 
-    const HONORED_REP = 9000; // Your data: Honored.have
+    const HONORED_REP = 9000;
 
     // Small items to Honored (max 9k total)
     const repToHonored = Math.max(
       0,
       Math.min(HONORED_REP - currentTotalRep, HONORED_REP),
     );
-    const smallItems = Math.ceil(repToHonored / SMALL_REP_PER_ITEM);
+    const smallItems = Math.ceil(repToHonored / repPerItem);
 
     // Big items: Honored (9k) to goal
     const repForBigItems = Math.max(
       0,
       goalTotalRep - Math.max(currentTotalRep, HONORED_REP),
     );
-    const bigItems = Math.ceil(repForBigItems / BIG_REP_PER_ITEM);
+    const bigItems = Math.ceil(repForBigItems / repPerItem);
 
     return { smallItems, bigItems };
-  };
+  }
 
   const { smallItems, bigItems } = calculateItemsNeeded(totalRep, goalRep);
 
