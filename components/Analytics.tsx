@@ -1,21 +1,22 @@
 'use client';
 import { useEffect } from 'react';
 
-export default function GoogleAnalytics({ GA_ID }: { GA_ID: string }) {
+export default function GoogleAnalytics() {
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-    script.async = true;
-    document.head.appendChild(script);
+    const script1 = document.createElement('script');
+    script1.async = true;
+    script1.src = 'https://www.googletagmanager.com/gtag/js?id=G-W7F7BDXE3S';
+    document.head.appendChild(script1);
 
-    window.dataLayer = window.dataLayer || [];
-    (window as any).gtag = function () {
-      window.dataLayer.push(arguments);
-    };
-
-    (window as any).gtag('js', new Date());
-    (window as any).gtag('config', GA_ID);
-  }, [GA_ID]);
+    const script2 = document.createElement('script');
+    script2.innerHTML = `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-W7F7BDXE3S');
+    `;
+    document.head.appendChild(script2);
+  }, []);
 
   return null;
 }
