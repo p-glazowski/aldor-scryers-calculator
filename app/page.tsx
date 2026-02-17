@@ -15,7 +15,7 @@ export default function Home() {
   const [openCurrentRep, setOpenCurrentRep] = useState(false);
   const [goalRep, setGoalRep] = useState(42000);
   const [openGoalRep, setOpenGoalRep] = useState(false);
-  const [itemPrice, setItemPrice] = useState({ small: 80, big: 90 });
+  const [itemPrice, setItemPrice] = useState({ small: 80, big: 90, best: 900 });
   const [humanRacial, setHumanRacial] = useState(false);
   const [side, setSide] = useState(1);
 
@@ -64,36 +64,65 @@ export default function Home() {
   }
 
   function calculateItemsNeeded(currentTotalRep: number, goalTotalRep: number) {
-    const repPerItem = humanRacial ? 25 + 25 / 10 : 25;
-
-    if (itemPrice.big <= itemPrice.small) {
-      const smallItems = 0;
-
-      const bigItems = Math.ceil((goalTotalRep - currentTotalRep) / repPerItem);
-
-      return { smallItems, bigItems };
+    if (goalTotalRep <= currentTotalRep) {
+      return { smallItems: 0, bigItems: 0, bestItems: 0 };
     }
 
-    const HONORED_REP = 9000;
+    const repPerSmall = humanRacial ? 25 * 1.1 : 25;
+    const repPerBig = humanRacial ? 25 * 1.1 : 25;
+    const repPerBest = humanRacial ? 350 * 1.1 : 350;
 
-    // Small items to Honored (max 9k total)
-    const repToHonored = Math.max(
-      0,
-      Math.min(HONORED_REP - currentTotalRep, HONORED_REP),
-    );
-    const smallItems = Math.ceil(repToHonored / repPerItem);
+    let remainingRep = goalTotalRep - currentTotalRep;
 
-    // Big items: Honored (9k) to goal
-    const repForBigItems = Math.max(
-      0,
-      goalTotalRep - Math.max(currentTotalRep, HONORED_REP),
-    );
-    const bigItems = Math.ceil(repForBigItems / repPerItem);
+    let smallItems = 0;
+    let bigItems = 0;
+    let bestItems = 0;
 
-    return { smallItems, bigItems };
+    const smallEff = repPerSmall / itemPrice.small;
+    const bigEff = repPerBig / itemPrice.big;
+    const bestEff = repPerBest / itemPrice.best;
+
+    const HONORED_CAP = 9000;
+
+    // ---- CASE 1: Best item is most efficient ----
+    if (bestEff >= smallEff && bestEff >= bigEff) {
+      bestItems = Math.ceil(remainingRep / repPerBest);
+      return { smallItems, bigItems, bestItems };
+    }
+
+    // ---- CASE 2: Big item is most efficient ----
+    if (bigEff >= smallEff && bigEff >= bestEff) {
+      bigItems = Math.ceil(remainingRep / repPerBig);
+      return { smallItems, bigItems, bestItems };
+    }
+
+    // ---- CASE 3: Small item is most efficient ----
+    if (currentTotalRep < HONORED_CAP) {
+      const repAvailableForSmall = Math.min(
+        HONORED_CAP - currentTotalRep,
+        remainingRep,
+      );
+
+      smallItems = Math.floor(repAvailableForSmall / repPerSmall);
+      remainingRep -= smallItems * repPerSmall;
+    }
+
+    if (remainingRep > 0) {
+      // After 9000 small items are not usable
+      if (bestEff >= bigEff) {
+        bestItems = Math.ceil(remainingRep / repPerBest);
+      } else {
+        bigItems = Math.ceil(remainingRep / repPerBig);
+      }
+    }
+
+    return { smallItems, bigItems, bestItems };
   }
 
-  const { smallItems, bigItems } = calculateItemsNeeded(totalRep, goalRep);
+  const { smallItems, bigItems, bestItems } = calculateItemsNeeded(
+    totalRep,
+    goalRep,
+  );
 
   return (
     <div className="w-full flex-1 bg-black/70 text-white p-6 pb-30">
@@ -182,7 +211,7 @@ export default function Home() {
                         }}
                       >
                         <span>{translateCurrentRep(currentRepLevel)}</span>{' '}
-                        <span>v</span>
+                        <span>{openCurrentRep ? '^' : 'v'}</span>
                       </button>
                       {openCurrentRep && (
                         <div className="absolute bg-my-obsidian w-full border rounded-md top-13 overflow-hidden z-10">
@@ -238,7 +267,7 @@ export default function Home() {
                         }}
                       >
                         <span>{translateCurrentRep(goalRep)}</span>{' '}
-                        <span>v</span>
+                        <span>{openGoalRep ? '^' : 'v'}</span>
                       </button>
                       {openGoalRep && (
                         <div className="absolute bg-my-obsidian w-full border rounded-md top-13 overflow-hidden z-20">
@@ -330,11 +359,39 @@ export default function Home() {
                       />
                     </div>
                   </div>
+                  <div className="flex flex-row gap-10 items-center justify-between">
+                    <div className="flex gap-4 items-center">
+                      <Image
+                        src={side === 1 ? '/fel.jpg' : '/arcane.jpg'}
+                        width={800}
+                        height={800}
+                        alt="Gold coins incon"
+                        className="w-8 h-8 rounded-md"
+                      />
+                      <p>{side === 1 ? `Fel Armament` : 'Arcane Tome'} price</p>
+                    </div>
+                    <div className="basis-1/3 relative">
+                      <p className="absolute top-1/2 -translate-y-1/2 right-3 text-gray-300">
+                        s
+                      </p>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        pattern="[0-9]*"
+                        name="best"
+                        id="rep"
+                        className="w-full h-full border border-my-violet text-my-lavender p-2 rounded-md"
+                        placeholder="0"
+                        value={itemPrice.best}
+                        onChange={handleItemPrice}
+                      />
+                    </div>
+                  </div>
                   <p className="text-xs -mt-2 text-my-gold text-center">
                     Price in{' '}
                     <span className="text-gray-300 font-bold">SILVER</span>{' '}
-                    (e.g. 2 gold 33 silver ={' '}
-                    <span className="text-gray-300 font-bold">233</span>)
+                    (e.g. 7 gold 33 silver ={' '}
+                    <span className="text-gray-300 font-bold">733</span>)
                   </p>
                 </div>
                 <div className="flex flex-row gap-2 items-center">
@@ -371,6 +428,7 @@ export default function Home() {
               itemPrice={itemPrice}
               smallItems={smallItems}
               bigItems={bigItems}
+              bestItems={bestItems}
               side={side}
             />
           </div>
