@@ -11,9 +11,14 @@
   --color-my-crystal: #e6d5ff; /*  // Faint purple shimmer */
 }
 
+html {
+  overscroll-behavior: none;
+}
+
 body {
   min-height: 100vh;
   background-image: url('/shatt.jpg');
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
