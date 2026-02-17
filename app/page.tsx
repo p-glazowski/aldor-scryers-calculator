@@ -426,7 +426,7 @@ export default function Home() {
                     </button>
                   </div>
                   <div className="text-xs text-my-lavender">
-                    <p className="font-bold">Human Racial (Doplomacy)</p>
+                    <p className="font-bold">Human Racial (Diplomacy)</p>
                     <p className="text-my-gold">
                       Humans gain 10% more reputation
                     </p>
