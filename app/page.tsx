@@ -72,51 +72,63 @@ export default function Home() {
     const repPerBig = humanRacial ? 25 * 1.1 : 25;
     const repPerBest = humanRacial ? 350 * 1.1 : 350;
 
-    let remainingRep = goalTotalRep - currentTotalRep;
-
-    let smallItems = 0;
-    let bigItems = 0;
-    let bestItems = 0;
-
-    const smallEff = repPerSmall / itemPrice.small;
-    const bigEff = repPerBig / itemPrice.big;
-    const bestEff = repPerBest / itemPrice.best;
-
     const HONORED_CAP = 9000;
+    const repNeeded = goalTotalRep - currentTotalRep;
 
-    // ---- CASE 1: Best item is most efficient ----
-    if (bestEff >= smallEff && bestEff >= bigEff) {
-      bestItems = Math.ceil(remainingRep / repPerBest);
-      return { smallItems, bigItems, bestItems };
-    }
+    let cheapest = {
+      cost: Infinity,
+      smallItems: 0,
+      bigItems: 0,
+      bestItems: 0,
+    };
 
-    // ---- CASE 2: Big item is most efficient ----
-    if (bigEff >= smallEff && bigEff >= bestEff) {
-      bigItems = Math.ceil(remainingRep / repPerBig);
-      return { smallItems, bigItems, bestItems };
-    }
+    // Maximum possible best items
+    const maxBest = Math.ceil(repNeeded / repPerBest);
 
-    // ---- CASE 3: Small item is most efficient ----
-    if (currentTotalRep < HONORED_CAP) {
-      const repAvailableForSmall = Math.min(
-        HONORED_CAP - currentTotalRep,
-        remainingRep,
-      );
+    for (let best = 0; best <= maxBest; best++) {
+      const repFromBest = best * repPerBest;
+      let remainingAfterBest = repNeeded - repFromBest;
 
-      smallItems = Math.floor(repAvailableForSmall / repPerSmall);
-      remainingRep -= smallItems * repPerSmall;
-    }
+      if (remainingAfterBest < 0) remainingAfterBest = 0;
 
-    if (remainingRep > 0) {
-      // After 9000 small items are not usable
-      if (bestEff >= bigEff) {
-        bestItems = Math.ceil(remainingRep / repPerBest);
-      } else {
-        bigItems = Math.ceil(remainingRep / repPerBig);
+      // Small items only usable before 9000
+      let smallLimit = 0;
+
+      if (currentTotalRep < HONORED_CAP) {
+        const repAvailableForSmall = Math.min(
+          HONORED_CAP - currentTotalRep,
+          repNeeded,
+        );
+        smallLimit = Math.floor(repAvailableForSmall / repPerSmall);
+      }
+
+      for (let small = 0; small <= smallLimit; small++) {
+        const repFromSmall = small * repPerSmall;
+
+        let remaining = repNeeded - repFromBest - repFromSmall;
+        if (remaining < 0) remaining = 0;
+
+        const big = Math.ceil(remaining / repPerBig);
+
+        const totalCost =
+          best * itemPrice.best + small * itemPrice.small + big * itemPrice.big;
+
+        if (totalCost < cheapest.cost) {
+          cheapest = {
+            cost: totalCost,
+            smallItems: small,
+            bigItems: big,
+            bestItems: best,
+          };
+        }
       }
     }
 
-    return { smallItems, bigItems, bestItems };
+    return {
+      smallItems: cheapest.smallItems,
+      bigItems: cheapest.bigItems,
+      bestItems: cheapest.bestItems,
+    };
   }
 
   const { smallItems, bigItems, bestItems } = calculateItemsNeeded(

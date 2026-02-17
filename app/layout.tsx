@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Aldor and Scryers Reputation Calculator',
   description:
-    'Free Aldor and Scryers reputation calculator for World of Warcraft. Calculate how many Marks or Signets you need to reach Exalted. Includes human racial bonus and cost analysis.',
+    'Free Aldor and Scryers reputation calculator for World of Warcraft. Calculate how many Marks, Signets, Fel Armaments or Arcane Tomes you need to reach Exalted and chooses the cheapest option. Includes human racial bonus and cost analysis.',
 };
 
 export default function RootLayout({
