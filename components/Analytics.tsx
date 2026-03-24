@@ -2,10 +2,11 @@
 import { useEffect } from 'react';
 
 export default function GoogleAnalytics() {
+  const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   useEffect(() => {
     const script1 = document.createElement('script');
     script1.async = true;
-    script1.src = 'https://www.googletagmanager.com/gtag/js?id=G-W7F7BDXE3S';
+    script1.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
     document.head.appendChild(script1);
 
     const script2 = document.createElement('script');
@@ -13,7 +14,7 @@ export default function GoogleAnalytics() {
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-W7F7BDXE3S');
+      gtag('config', '${GA_ID}');
     `;
     document.head.appendChild(script2);
   }, []);
