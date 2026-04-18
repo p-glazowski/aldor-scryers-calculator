@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { use, useState } from 'react';
 import { translateCurrentRep } from '@/functions/functions';
 import { motion } from 'motion/react';
+import Link from 'next/link';
 
 export default function Home() {
   const [currentRepLevel, setCurrentRepLevel] = useState(0);
@@ -180,8 +181,19 @@ export default function Home() {
 
   return (
     <div className="w-full flex-1 bg-black/70 text-white p-6 pb-30">
+      <div className="absolute top-5 right-5 w-50 hidden lg:block">
+        <Link href={'https://ko-fi.com/reptoolcalculator'} target="_blank">
+          <Image
+            src="/bmc-button.svg"
+            alt="Buy me coffee link"
+            width={545}
+            height={153}
+            className="w-full h-full"
+          />
+        </Link>
+      </div>
       <div className="max-w-300 mx-auto flex flex-col gap-10">
-        <header className="flex flex-row items-center gap-4 justify-center md:gap-20">
+        <header className="flex flex-row items-center gap-4 justify-center md:gap-20 ">
           <div className="rounded-md overflow-hidden">
             <Image
               src="/mark.jpg"
@@ -497,6 +509,17 @@ export default function Home() {
           </div>
           <Guidee side={side} />
         </main>
+      </div>
+      <div className="w-60 mx-auto mt-10 block lg:hidden">
+        <Link href={'https://ko-fi.com/reptoolcalculator'} target="_blank">
+          <Image
+            src="/bmc-button.svg"
+            alt="Buy me coffee link"
+            width={545}
+            height={153}
+            className="w-full h-full"
+          />
+        </Link>
       </div>
     </div>
   );
