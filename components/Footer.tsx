@@ -9,6 +9,7 @@ export default function Footer() {
       >
         All donations help cover server costs and keep the tool running ❤️
       </a>
+      Contact at aldorscryers.calculator@gmail.com
     </footer>
   );
 }
